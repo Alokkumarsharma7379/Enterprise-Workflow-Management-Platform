@@ -1,3 +1,6 @@
 package com.example.workflow.project;
 
-public enum ProjectStatus { ACTIVE, ARCHIVED }
+public enum ProjectStatus {
+  ACTIVE,
+  ARCHIVED,
+}

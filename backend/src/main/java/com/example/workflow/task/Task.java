@@ -8,59 +8,120 @@ import java.util.UUID;
 @Entity
 @Table(name = "tasks")
 public class Task {
-    @Id
-    private UUID id = UUID.randomUUID();
-    private UUID projectId;
-    private long taskNumber;
-    private String title;
-    private String description;
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status;
-    @Enumerated(EnumType.STRING)
-    private TaskPriority priority;
-    private UUID reporterId;
-    private UUID assigneeId;
-    private LocalDate dueDate;
-    private Instant createdAt = Instant.now();
-    private Instant updatedAt = Instant.now();
-    @Version
-    private long version;
 
-    @PreUpdate
-    void touch() { updatedAt = Instant.now(); }
+  @Id
+  private UUID id = UUID.randomUUID();
 
-    public UUID getId() { return id; }
+  private UUID projectId;
+  private long taskNumber;
+  private String title;
+  private String description;
 
-    public UUID getProjectId() { return projectId; }
-    public void setProjectId(UUID projectId) { this.projectId = projectId; }
+  @Enumerated(EnumType.STRING)
+  private TaskStatus status;
 
-    public long getTaskNumber() { return taskNumber; }
-    public void setTaskNumber(long taskNumber) { this.taskNumber = taskNumber; }
+  @Enumerated(EnumType.STRING)
+  private TaskPriority priority;
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+  private UUID reporterId;
+  private UUID assigneeId;
+  private LocalDate dueDate;
+  private Instant createdAt = Instant.now();
+  private Instant updatedAt = Instant.now();
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+  @Version
+  private long version;
 
-    public TaskStatus getStatus() { return status; }
-    public void setStatus(TaskStatus status) { this.status = status; }
+  @PreUpdate
+  void touch() {
+    updatedAt = Instant.now();
+  }
 
-    public TaskPriority getPriority() { return priority; }
-    public void setPriority(TaskPriority priority) { this.priority = priority; }
+  public UUID getId() {
+    return id;
+  }
 
-    public UUID getReporterId() { return reporterId; }
-    public void setReporterId(UUID reporterId) { this.reporterId = reporterId; }
+  public UUID getProjectId() {
+    return projectId;
+  }
 
-    public UUID getAssigneeId() { return assigneeId; }
-    public void setAssigneeId(UUID assigneeId) { this.assigneeId = assigneeId; }
+  public void setProjectId(UUID projectId) {
+    this.projectId = projectId;
+  }
 
-    public LocalDate getDueDate() { return dueDate; }
-    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+  public long getTaskNumber() {
+    return taskNumber;
+  }
 
-    public Instant getCreatedAt() { return createdAt; }
+  public void setTaskNumber(long taskNumber) {
+    this.taskNumber = taskNumber;
+  }
 
-    public Instant getUpdatedAt() { return updatedAt; }
+  public String getTitle() {
+    return title;
+  }
 
-    public long getVersion() { return version; }
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public TaskStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(TaskStatus status) {
+    this.status = status;
+  }
+
+  public TaskPriority getPriority() {
+    return priority;
+  }
+
+  public void setPriority(TaskPriority priority) {
+    this.priority = priority;
+  }
+
+  public UUID getReporterId() {
+    return reporterId;
+  }
+
+  public void setReporterId(UUID reporterId) {
+    this.reporterId = reporterId;
+  }
+
+  public UUID getAssigneeId() {
+    return assigneeId;
+  }
+
+  public void setAssigneeId(UUID assigneeId) {
+    this.assigneeId = assigneeId;
+  }
+
+  public LocalDate getDueDate() {
+    return dueDate;
+  }
+
+  public void setDueDate(LocalDate dueDate) {
+    this.dueDate = dueDate;
+  }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public long getVersion() {
+    return version;
+  }
 }

@@ -8,35 +8,68 @@ import java.util.UUID;
 @Entity
 @Table(name = "organization_members")
 public class Membership {
-    @Id
-    private UUID id = UUID.randomUUID();
-    private UUID organizationId;
-    private UUID userId;
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    @Enumerated(EnumType.STRING)
-    private MembershipStatus status;
-    private Instant createdAt = Instant.now();
-    private Instant updatedAt = Instant.now();
 
-    @PreUpdate
-    void touch() { updatedAt = Instant.now(); }
+  @Id
+  private UUID id = UUID.randomUUID();
 
-    public UUID getId() { return id; }
+  private UUID organizationId;
+  private UUID userId;
 
-    public UUID getOrganizationId() { return organizationId; }
-    public void setOrganizationId(UUID organizationId) { this.organizationId = organizationId; }
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
-    public UUID getUserId() { return userId; }
-    public void setUserId(UUID userId) { this.userId = userId; }
+  @Enumerated(EnumType.STRING)
+  private MembershipStatus status;
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+  private Instant createdAt = Instant.now();
+  private Instant updatedAt = Instant.now();
 
-    public MembershipStatus getStatus() { return status; }
-    public void setStatus(MembershipStatus status) { this.status = status; }
+  @PreUpdate
+  void touch() {
+    updatedAt = Instant.now();
+  }
 
-    public Instant getCreatedAt() { return createdAt; }
+  public UUID getId() {
+    return id;
+  }
 
-    public Instant getUpdatedAt() { return updatedAt; }
+  public UUID getOrganizationId() {
+    return organizationId;
+  }
+
+  public void setOrganizationId(UUID organizationId) {
+    this.organizationId = organizationId;
+  }
+
+  public UUID getUserId() {
+    return userId;
+  }
+
+  public void setUserId(UUID userId) {
+    this.userId = userId;
+  }
+
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  public MembershipStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(MembershipStatus status) {
+    this.status = status;
+  }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
 }

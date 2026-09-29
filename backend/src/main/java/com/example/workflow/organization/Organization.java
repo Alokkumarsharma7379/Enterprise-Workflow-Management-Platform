@@ -8,29 +8,52 @@ import java.util.UUID;
 @Entity
 @Table(name = "organizations")
 public class Organization {
-    @Id
-    private UUID id = UUID.randomUUID();
-    private String name;
-    private UUID createdBy;
-    private Instant createdAt = Instant.now();
-    private Instant updatedAt = Instant.now();
-    @Version
-    private long version;
 
-    @PreUpdate
-    void touch() { updatedAt = Instant.now(); }
+  @Id
+  private UUID id = UUID.randomUUID();
 
-    public UUID getId() { return id; }
+  private String name;
+  private UUID createdBy;
+  private Instant createdAt = Instant.now();
+  private Instant updatedAt = Instant.now();
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+  @Version
+  private long version;
 
-    public UUID getCreatedBy() { return createdBy; }
-    public void setCreatedBy(UUID createdBy) { this.createdBy = createdBy; }
+  @PreUpdate
+  void touch() {
+    updatedAt = Instant.now();
+  }
 
-    public Instant getCreatedAt() { return createdAt; }
+  public UUID getId() {
+    return id;
+  }
 
-    public Instant getUpdatedAt() { return updatedAt; }
+  public String getName() {
+    return name;
+  }
 
-    public long getVersion() { return version; }
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public UUID getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(UUID createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public long getVersion() {
+    return version;
+  }
 }
