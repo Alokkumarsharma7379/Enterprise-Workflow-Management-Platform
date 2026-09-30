@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -51,13 +54,18 @@ public class SecurityConfig {
     OAuth2TokenValidator<Jwt> requiredClaims = jwt -> {
       try {
         UUID.fromString(jwt.getSubject());
-        if (jwt.getExpiresAt() != null && jwt.getAudience().contains("workflow-api")) {
+        if (
+          jwt.getExpiresAt() != null &&
+          jwt.getAudience().contains("workflow-api")
+        ) {
           return OAuth2TokenValidatorResult.success();
         }
       } catch (IllegalArgumentException | NullPointerException invalidSubject) {
         // Reject signed tokens that do not contain an application user identity.
       }
-      return OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token"));
+      return OAuth2TokenValidatorResult.failure(
+        new OAuth2Error("invalid_token")
+      );
     };
     decoder.setJwtValidator(
       new DelegatingOAuth2TokenValidator<>(
@@ -186,5 +194,31 @@ public class SecurityConfig {
         )
       )
       .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+  }
+
+  @Bean
+  OpenApiCustomizer authenticationDocumentation() {
+    return api ->
+      api.getPaths().forEach((path, item) -> {
+        if (path.startsWith("/api/auth/") && !path.endsWith("/me")) {
+          item
+            .readOperations()
+            .forEach(operation -> operation.setSecurity(List.of()));
+          if (item.getPost() != null) {
+            item
+              .getPost()
+              .addParametersItem(
+                new Parameter()
+                  .in("header")
+                  .name("X-XSRF-TOKEN")
+                  .required(true)
+                  .schema(new StringSchema())
+                  .description(
+                    "First call GET /api/auth/csrf in this browser, then copy its token here. The cookie is sent automatically."
+                  )
+              );
+          }
+        }
+      });
   }
 }

@@ -30,9 +30,10 @@ async function csrf() {
           );
         return (await response.json()).token;
       })
-      .catch((error) => {
+      .finally(() => {
+        // Authentication can clear the CSRF cookie. Cache only an in-flight
+        // bootstrap, never a token across authentication state changes.
         csrfPromise = null;
-        throw error;
       });
   }
   return csrfPromise;
@@ -62,7 +63,12 @@ export async function refreshSession() {
   return refreshPromise;
 }
 
-export async function request(path, options = {}, retry = true) {
+export async function request(
+  path,
+  options = {},
+  retry = true,
+  csrfRetry = true,
+) {
   const method = options.method || "GET";
   const headers = { ...options.headers };
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
@@ -92,6 +98,16 @@ export async function request(path, options = {}, retry = true) {
   if (response.status === 401 && retry && !path.startsWith("/auth/")) {
     await refreshSession();
     return request(path, options, false);
+  }
+  if (
+    response.status === 403 &&
+    csrfRetry &&
+    path.startsWith("/auth/") &&
+    method !== "GET"
+  ) {
+    // A concurrent bearer request may clear the cookie after bootstrap. A
+    // rejected CSRF request has not reached the controller; retry it once.
+    return request(path, options, retry, false);
   }
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));

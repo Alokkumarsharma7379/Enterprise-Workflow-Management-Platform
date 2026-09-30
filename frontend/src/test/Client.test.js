@@ -56,3 +56,36 @@ it("does not recursively refresh after a second 401", async () => {
   });
   expect(refreshes).toBe(1);
 });
+
+it("obtains a fresh CSRF token for each authentication mutation", async () => {
+  let bootstraps = 0;
+  const sentTokens = [];
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url, options) => {
+      if (url.endsWith("/auth/csrf"))
+        return response(200, { token: `csrf-${++bootstraps}` });
+      sentTokens.push(options.headers["X-XSRF-TOKEN"]);
+      return response(204, null);
+    }),
+  );
+  await client.request("/auth/logout", { method: "POST" });
+  await client.request("/auth/logout", { method: "POST" });
+  expect(sentTokens).toEqual(["csrf-1", "csrf-2"]);
+});
+
+it("retries a rejected CSRF authentication request at most once", async () => {
+  let attempts = 0;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url) => {
+      if (url.endsWith("/auth/csrf")) return response(200, { token: "csrf" });
+      attempts++;
+      return response(403, { message: "Access denied or missing CSRF token" });
+    }),
+  );
+  await expect(
+    client.request("/auth/logout", { method: "POST" }),
+  ).rejects.toMatchObject({ status: 403 });
+  expect(attempts).toBe(2);
+});

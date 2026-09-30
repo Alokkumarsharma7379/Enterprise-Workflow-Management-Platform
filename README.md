@@ -155,6 +155,14 @@ Only the API base URL belongs in frontend configuration. Never put database cred
 
 ## 13. Running locally
 
+On Windows, this workspace also includes a convenience launcher:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start-local.ps1
+```
+
+It discovers installed Java/Node or the ignored local tools, builds the backend, and starts both servers without opening extra windows. It reuses this workspace's isolated PostgreSQL instance if present; otherwise it uses `.env`. It does not install software or create a system database. Stop its services with `scripts/stop-local.ps1`; `-StopDatabase` also stops only the isolated workspace database. It runs the server from a copied jar so future Maven builds do not collide with a Windows file lock. For a fresh checkout, use the prerequisites and database setup below.
+
 Create a PostgreSQL database named `workflow`, owned by an application role matching `.env`. Use an administrative PostgreSQL session to create the role/database and `\password workflow` to set its password without embedding it in command history. Match the password in `.env`.
 
 In PowerShell, terminal 1:
@@ -283,6 +291,8 @@ Screenshots are captured from the actual application by the browser test with `C
 ![Task detail and discussion](docs/screenshots/task-details.png)
 
 ## 24. Interview discussion topics
+
+Start with the [complete project interview handbook](PROJECT_INTERVIEW_HANDBOOK.md): 160 questions with answers, technology choices and alternatives, source walkthroughs, SQL practice, a demonstration script, and a seven-day study plan.
 
 Read [the learning guide](docs/learning-guide.md), trace a task update through the source, then use [the interview prompts](docs/interview.md). The prompts intentionally do not provide memorized answers. [Phase ledger](docs/phases.md) maps the requested development phases to files and checks.
 

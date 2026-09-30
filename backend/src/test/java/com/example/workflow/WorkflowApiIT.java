@@ -430,6 +430,7 @@ class WorkflowApiIT {
   @Test
   void commentAuthorCanEditButOtherMemberAndAdminCannotRewrite()
     throws Exception {
+    add(other, "MEMBER");
     String id = createTask(owner, "Discussion", null).get("id").asText();
     String comment = body(
       send(
@@ -442,7 +443,7 @@ class WorkflowApiIT {
       .get("id")
       .asText();
     send(
-      manager,
+      other,
       patch("/api/comments/" + comment),
       Map.of("version", 0, "body", "Other"),
       403

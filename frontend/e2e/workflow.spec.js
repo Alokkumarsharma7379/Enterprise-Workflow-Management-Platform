@@ -85,6 +85,8 @@ test("register, create workspace and project, work a task, refresh, and log out"
     page.getByRole("heading", { name: "Implement a secure login" }),
   ).toBeVisible();
   await expect(page.getByLabel("Task status")).toHaveValue("IN_PROGRESS");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
   await page.getByRole("button", { name: "Log out" }).click();
   await expect(
     page.getByRole("heading", { name: "Welcome back" }),

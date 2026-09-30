@@ -94,6 +94,9 @@ Application logs describe runtime failures. Activity logs describe business chan
 - Windows npm scripts invoke JavaScript entry points directly to support workspace paths containing `&`.
 - The Vitest dependency was updated after a package audit reported a vulnerable transitive version.
 - Form labels use explicit label/control associations so selects have clear accessible names.
+- A browser regression exposed CSRF invalidation after bearer authentication. The client now caches only an in-flight bootstrap and retries rejected authentication CSRF checks at most once; reload/logout is browser-tested.
+- The mobile layout retains a visible logout control.
+- The Windows launcher runs a copy of the packaged jar, allowing Maven to rebuild without conflicting with the running JVM's file handle.
 
 ## Sources
 
